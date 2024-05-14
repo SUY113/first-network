@@ -1,0 +1,88 @@
+---
+name: first-network-orgStaff
+version: 1.0.0
+client:
+  organization: OrgStaff
+  connection:
+    timeout:
+      peer:
+        endorser: '300'
+organizations:
+  OrgStaff:
+    mspid: OrgStaffMSP
+    peers:
+    - peer0.orgStaff.example.com
+    - peer1.orgStaff.example.com
+    certificateAuthorities:
+    - ca.orgStaff.example.com
+peers:
+  peer0.orgStaff.example.com:
+    url: grpcs://localhost:7051
+    tlsCACerts:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICZzCCAg2gAwIBAgIQUADHPYKHh5zqii42lwPeTjAKBggqhkjOPQQDAjB+MQsw
+        CQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZy
+        YW5jaXNjbzEdMBsGA1UEChMUb3JnU3RhZmYuZXhhbXBsZS5jb20xIzAhBgNVBAMT
+        GnRsc2NhLm9yZ1N0YWZmLmV4YW1wbGUuY29tMB4XDTI0MDUxNDAzNTQwMFoXDTM0
+        MDUxMjAzNTQwMFowfjELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWEx
+        FjAUBgNVBAcTDVNhbiBGcmFuY2lzY28xHTAbBgNVBAoTFG9yZ1N0YWZmLmV4YW1w
+        bGUuY29tMSMwIQYDVQQDExp0bHNjYS5vcmdTdGFmZi5leGFtcGxlLmNvbTBZMBMG
+        ByqGSM49AgEGCCqGSM49AwEHA0IABAuZyfeXbu91eMUsCM3rYSIbzi7eQs4rvQxs
+        8qNH16I+vBKNhp26kewuQJsCr7VpbQsGrwexnLZ6SBhhbufJujmjbTBrMA4GA1Ud
+        DwEB/wQEAwIBpjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwEwDwYDVR0T
+        AQH/BAUwAwEB/zApBgNVHQ4EIgQgPDLcuVYeEoMYatfzknVy8GZOrjWZHMJJfFQS
+        sJRsg78wCgYIKoZIzj0EAwIDSAAwRQIhAMJI/FC9lFvt8LwOguD2QZH9vdh6tFUo
+        X4QgHOM3MJReAiACMmc0Ajl1Z22oNMr0DHUvWUXgMDAdISP0tu/M4En/cQ==
+        -----END CERTIFICATE-----
+        
+    grpcOptions:
+      ssl-target-name-override: peer0.orgStaff.example.com
+      hostnameOverride: peer0.orgStaff.example.com
+  peer1.orgStaff.example.com:
+    url: grpcs://localhost:8051
+    tlsCACerts:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICZzCCAg2gAwIBAgIQUADHPYKHh5zqii42lwPeTjAKBggqhkjOPQQDAjB+MQsw
+        CQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZy
+        YW5jaXNjbzEdMBsGA1UEChMUb3JnU3RhZmYuZXhhbXBsZS5jb20xIzAhBgNVBAMT
+        GnRsc2NhLm9yZ1N0YWZmLmV4YW1wbGUuY29tMB4XDTI0MDUxNDAzNTQwMFoXDTM0
+        MDUxMjAzNTQwMFowfjELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWEx
+        FjAUBgNVBAcTDVNhbiBGcmFuY2lzY28xHTAbBgNVBAoTFG9yZ1N0YWZmLmV4YW1w
+        bGUuY29tMSMwIQYDVQQDExp0bHNjYS5vcmdTdGFmZi5leGFtcGxlLmNvbTBZMBMG
+        ByqGSM49AgEGCCqGSM49AwEHA0IABAuZyfeXbu91eMUsCM3rYSIbzi7eQs4rvQxs
+        8qNH16I+vBKNhp26kewuQJsCr7VpbQsGrwexnLZ6SBhhbufJujmjbTBrMA4GA1Ud
+        DwEB/wQEAwIBpjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwEwDwYDVR0T
+        AQH/BAUwAwEB/zApBgNVHQ4EIgQgPDLcuVYeEoMYatfzknVy8GZOrjWZHMJJfFQS
+        sJRsg78wCgYIKoZIzj0EAwIDSAAwRQIhAMJI/FC9lFvt8LwOguD2QZH9vdh6tFUo
+        X4QgHOM3MJReAiACMmc0Ajl1Z22oNMr0DHUvWUXgMDAdISP0tu/M4En/cQ==
+        -----END CERTIFICATE-----
+        
+    grpcOptions:
+      ssl-target-name-override: peer1.orgStaff.example.com
+      hostnameOverride: peer1.orgStaff.example.com
+certificateAuthorities:
+  ca.orgStaff.example.com:
+    url: https://localhost:7054
+    caName: ca-orgStaff
+    tlsCACerts:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICYDCCAgegAwIBAgIQcyBADf3tiRNn5rEXN4FBXTAKBggqhkjOPQQDAjB7MQsw
+        CQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZy
+        YW5jaXNjbzEdMBsGA1UEChMUb3JnU3RhZmYuZXhhbXBsZS5jb20xIDAeBgNVBAMT
+        F2NhLm9yZ1N0YWZmLmV4YW1wbGUuY29tMB4XDTI0MDUxNDAzNTQwMFoXDTM0MDUx
+        MjAzNTQwMFowezELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAU
+        BgNVBAcTDVNhbiBGcmFuY2lzY28xHTAbBgNVBAoTFG9yZ1N0YWZmLmV4YW1wbGUu
+        Y29tMSAwHgYDVQQDExdjYS5vcmdTdGFmZi5leGFtcGxlLmNvbTBZMBMGByqGSM49
+        AgEGCCqGSM49AwEHA0IABLmJjGQBothqbtIe+zizmTg4Vk9ukT45RmSEWsrNrA+t
+        Px104/zvNwhgpmyOsGLxJU34b3ZfWoLGxOr+62yKa9OjbTBrMA4GA1UdDwEB/wQE
+        AwIBpjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwEwDwYDVR0TAQH/BAUw
+        AwEB/zApBgNVHQ4EIgQgkkdtoG+6KJwQXT+mgixLd1trytJEdnapi1k31DnQma4w
+        CgYIKoZIzj0EAwIDRwAwRAIgLSvi95FbqZhMWclT3mkMkDbTiUjIVuZC4sid/T/h
+        xrgCIEpUwxIyIOx5bTnxnDf++GI+IgZP2CKndRBTjAMjVlza
+        -----END CERTIFICATE-----
+        
+    httpOptions:
+      verify: false
