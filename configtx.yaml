@@ -41,15 +41,15 @@ Organizations:
                 Type: Signature
                 Rule: "OR('OrdererMSP.admin')"
 
-    - &OrgStaff
+    - &OrgAccountant
         # DefaultOrg defines the organization which is used in the sampleconfig
         # of the fabric.git development environment
-        Name: OrgStaffMSP
+        Name: OrgAccountantMSP
 
         # ID to load the MSP definition as
-        ID: OrgStaffMSP
+        ID: OrgAccountantMSP
 
-        MSPDir: crypto-config/peerOrganizations/orgStaff.example.com/msp
+        MSPDir: crypto-config/peerOrganizations/orgAccountant.example.com/msp
 
         # Policies defines the set of policies at this level of the config tree
         # For organization policies, their canonical path is usually
@@ -57,20 +57,20 @@ Organizations:
         Policies:
             Readers:
                 Type: Signature
-                Rule: "OR('OrgStaffMSP.admin', 'OrgStaffMSP.peer', 'OrgStaffMSP.client')"
+                Rule: "OR('OrgAccountantMSP.admin', 'OrgAccountantMSP.peer', 'OrgAccountantMSP.client')"
             Writers:
                 Type: Signature
-                Rule: "OR('OrgStaffMSP.admin', 'OrgStaffMSP.client')"
+                Rule: "OR('OrgAccountantMSP.admin', 'OrgAccountantMSP.client')"
             Admins:
                 Type: Signature
-                Rule: "OR('OrgStaffMSP.admin')"
+                Rule: "OR('OrgAccountantMSP.admin')"
 
         # leave this flag set to true.
         AnchorPeers:
             # AnchorPeers defines the location of peers which can be used
             # for cross org gossip communication.  Note, this value is only
             # encoded in the genesis block in the Application section context
-            - Host: peer0.orgStaff.example.com
+            - Host: peer0.orgAccountant.example.com
               Port: 7051
 
     - &Org2
@@ -351,7 +351,7 @@ Profiles:
         Consortiums:
             SampleConsortium:
                 Organizations:
-                    - *OrgStaff
+                    - *OrgAccountant
                     - *Org2
     TwoOrgsChannel:
         Consortium: SampleConsortium
@@ -359,7 +359,7 @@ Profiles:
         Application:
             <<: *ApplicationDefaults
             Organizations:
-                - *OrgStaff
+                - *OrgAccountant
                 - *Org2
             Capabilities:
                 <<: *ApplicationCapabilities
@@ -386,7 +386,7 @@ Profiles:
         Consortiums:
             SampleConsortium:
                 Organizations:
-                - *OrgStaff
+                - *OrgAccountant
                 - *Org2
 
     SampleMultiNodeEtcdRaft:
@@ -436,5 +436,5 @@ Profiles:
         Consortiums:
             SampleConsortium:
                 Organizations:
-                - *OrgStaff
+                - *OrgAccountant
                 - *Org2

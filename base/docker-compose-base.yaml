@@ -20,47 +20,47 @@ services:
     ports:
       - 7050:7050
 
-  peer0.orgStaff.example.com:
-    container_name: peer0.orgStaff.example.com
+  peer0.orgAccountant.example.com:
+    container_name: peer0.orgAccountant.example.com
     extends:
       file: peer-base.yaml
       service: peer-base
     environment:
-      - CORE_PEER_ID=peer0.orgStaff.example.com
-      - CORE_PEER_ADDRESS=peer0.orgStaff.example.com:7051
+      - CORE_PEER_ID=peer0.orgAccountant.example.com
+      - CORE_PEER_ADDRESS=peer0.orgAccountant.example.com:7051
       - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
-      - CORE_PEER_CHAINCODEADDRESS=peer0.orgStaff.example.com:7052
+      - CORE_PEER_CHAINCODEADDRESS=peer0.orgAccountant.example.com:7052
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.orgStaff.example.com:8051
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.orgStaff.example.com:7051
-      - CORE_PEER_LOCALMSPID=OrgStaffMSP
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.orgAccountant.example.com:8051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.orgAccountant.example.com:7051
+      - CORE_PEER_LOCALMSPID=OrgAccountantMSP
     volumes:
         - /var/run/:/host/var/run/
-        - ../crypto-config/peerOrganizations/orgStaff.example.com/peers/peer0.orgStaff.example.com/msp:/etc/hyperledger/fabric/msp
-        - ../crypto-config/peerOrganizations/orgStaff.example.com/peers/peer0.orgStaff.example.com/tls:/etc/hyperledger/fabric/tls
-        - peer0.orgStaff.example.com:/var/hyperledger/production
+        - ../crypto-config/peerOrganizations/orgAccountant.example.com/peers/peer0.orgAccountant.example.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/orgAccountant.example.com/peers/peer0.orgAccountant.example.com/tls:/etc/hyperledger/fabric/tls
+        - peer0.orgAccountant.example.com:/var/hyperledger/production
     ports:
       - 7051:7051
 
-  peer1.orgStaff.example.com:
-    container_name: peer1.orgStaff.example.com
+  peer1.orgAccountant.example.com:
+    container_name: peer1.orgAccountant.example.com
     extends:
       file: peer-base.yaml
       service: peer-base
     environment:
-      - CORE_PEER_ID=peer1.orgStaff.example.com
-      - CORE_PEER_ADDRESS=peer1.orgStaff.example.com:8051
+      - CORE_PEER_ID=peer1.orgAccountant.example.com
+      - CORE_PEER_ADDRESS=peer1.orgAccountant.example.com:8051
       - CORE_PEER_LISTENADDRESS=0.0.0.0:8051
-      - CORE_PEER_CHAINCODEADDRESS=peer1.orgStaff.example.com:8052
+      - CORE_PEER_CHAINCODEADDRESS=peer1.orgAccountant.example.com:8052
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:8052
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.orgStaff.example.com:8051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.orgStaff.example.com:7051
-      - CORE_PEER_LOCALMSPID=OrgStaffMSP
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.orgAccountant.example.com:8051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.orgAccountant.example.com:7051
+      - CORE_PEER_LOCALMSPID=OrgAccountantMSP
     volumes:
         - /var/run/:/host/var/run/
-        - ../crypto-config/peerOrganizations/orgStaff.example.com/peers/peer1.orgStaff.example.com/msp:/etc/hyperledger/fabric/msp
-        - ../crypto-config/peerOrganizations/orgStaff.example.com/peers/peer1.orgStaff.example.com/tls:/etc/hyperledger/fabric/tls
-        - peer1.orgStaff.example.com:/var/hyperledger/production
+        - ../crypto-config/peerOrganizations/orgAccountant.example.com/peers/peer1.orgAccountant.example.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/orgAccountant.example.com/peers/peer1.orgAccountant.example.com/tls:/etc/hyperledger/fabric/tls
+        - peer1.orgAccountant.example.com:/var/hyperledger/production
 
     ports:
       - 8051:8051

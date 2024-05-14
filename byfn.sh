@@ -279,10 +279,10 @@ function replacePrivateKey() {
   # The next steps will replace the template's contents with the
   # actual values of the private key file names for the two CAs.
   CURRENT_DIR=$PWD
-  cd crypto-config/peerOrganizations/orgStaff.example.com/ca/
+  cd crypto-config/peerOrganizations/orgAccountant.example.com/ca/
   PRIV_KEY=$(ls *_sk)
   cd "$CURRENT_DIR"
-  sed $OPTS "s/CAStaff_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-e2e.yaml
+  sed $OPTS "s/CAAccountant_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-e2e.yaml
   cd crypto-config/peerOrganizations/org2.example.com/ca/
   PRIV_KEY=$(ls *_sk)
   cd "$CURRENT_DIR"
@@ -422,14 +422,14 @@ function generateChannelArtifacts() {
 
   echo
   echo "#################################################################"
-  echo "#######    Generating anchor peer update for OrgStaffMSP   ##########"
+  echo "#######    Generating anchor peer update for OrgAccountantMSP   ##########"
   echo "#################################################################"
   set -x
-  configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/OrgStaffMSPanchors.tx -channelID $CHANNEL_NAME -asOrg OrgStaffMSP
+  configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/OrgAccountantMSPanchors.tx -channelID $CHANNEL_NAME -asOrg OrgAccountantMSP
   res=$?
   set +x
   if [ $res -ne 0 ]; then
-    echo "Failed to generate anchor peer update for OrgStaffMSP..."
+    echo "Failed to generate anchor peer update for OrgAccountantMSP..."
     exit 1
   fi
 

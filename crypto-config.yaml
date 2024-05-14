@@ -30,8 +30,8 @@ PeerOrgs:
   # ---------------------------------------------------------------------------
   # Org1
   # ---------------------------------------------------------------------------
-  - Name: OrgStaff
-    Domain: orgStaff.example.com
+  - Name: OrgAccountant
+    Domain: orgAccountant.example.com
     EnableNodeOUs: true
     # ---------------------------------------------------------------------------
     # "Specs"

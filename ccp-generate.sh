@@ -28,15 +28,15 @@ function yaml_ccp {
         ccp-template.yaml | sed -e $'s/\\\\n/\\\n        /g'
 }
 
-ORG=Staff
+ORG=Accountant
 P0PORT=7051
 P1PORT=8051
 CAPORT=7054
-PEERPEM=crypto-config/peerOrganizations/orgStaff.example.com/tlsca/tlsca.orgStaff.example.com-cert.pem
-CAPEM=crypto-config/peerOrganizations/orgStaff.example.com/ca/ca.orgStaff.example.com-cert.pem
+PEERPEM=crypto-config/peerOrganizations/orgAccountant.example.com/tlsca/tlsca.orgAccountant.example.com-cert.pem
+CAPEM=crypto-config/peerOrganizations/orgAccountant.example.com/ca/ca.orgAccountant.example.com-cert.pem
 
-echo "$(json_ccp $ORG $P0PORT $P1PORT $CAPORT $PEERPEM $CAPEM)" > connection-orgStaff.json
-echo "$(yaml_ccp $ORG $P0PORT $P1PORT $CAPORT $PEERPEM $CAPEM)" > connection-orgStaff.yaml
+echo "$(json_ccp $ORG $P0PORT $P1PORT $CAPORT $PEERPEM $CAPEM)" > connection-orgAccountant.json
+echo "$(yaml_ccp $ORG $P0PORT $P1PORT $CAPORT $PEERPEM $CAPEM)" > connection-orgAccountant.yaml
 
 ORG=2
 P0PORT=9051

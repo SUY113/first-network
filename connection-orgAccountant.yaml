@@ -1,0 +1,91 @@
+---
+name: first-network-orgAccountant
+version: 1.0.0
+client:
+  organization: OrgAccountant
+  connection:
+    timeout:
+      peer:
+        endorser: '300'
+organizations:
+  OrgAccountant:
+    mspid: OrgAccountantMSP
+    peers:
+    - peer0.orgAccountant.example.com
+    - peer1.orgAccountant.example.com
+    certificateAuthorities:
+    - ca.orgAccountant.example.com
+peers:
+  peer0.orgAccountant.example.com:
+    url: grpcs://localhost:7051
+    tlsCACerts:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICfTCCAiSgAwIBAgIRAPV1ybYMKERmJ6l+117H1ZQwCgYIKoZIzj0EAwIwgYgx
+        CzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1TYW4g
+        RnJhbmNpc2NvMSIwIAYDVQQKExlvcmdBY2NvdW50YW50LmV4YW1wbGUuY29tMSgw
+        JgYDVQQDEx90bHNjYS5vcmdBY2NvdW50YW50LmV4YW1wbGUuY29tMB4XDTI0MDUx
+        NDA4NTAwMFoXDTM0MDUxMjA4NTAwMFowgYgxCzAJBgNVBAYTAlVTMRMwEQYDVQQI
+        EwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1TYW4gRnJhbmNpc2NvMSIwIAYDVQQKExlv
+        cmdBY2NvdW50YW50LmV4YW1wbGUuY29tMSgwJgYDVQQDEx90bHNjYS5vcmdBY2Nv
+        dW50YW50LmV4YW1wbGUuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAElnW8
+        3KVTgjK4R7VCWkJHZsWcPwa6k2RZPcVoEn29zypYkaKRoR5yk9tSEjR+1YeIHpDk
+        mBIt3Lze6iQviNPp6qNtMGswDgYDVR0PAQH/BAQDAgGmMB0GA1UdJQQWMBQGCCsG
+        AQUFBwMCBggrBgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MCkGA1UdDgQiBCBw5N3l
+        H6b5K0/VJYBgKLLA7ak2vD7cefAMFdvrPMBs+jAKBggqhkjOPQQDAgNHADBEAiB2
+        IUhYqoMvKsA+oprcw7WIozGG16mtCgf5ha7J6HWf5wIgHns41etIUG3I2w75BwmE
+        rCv1vYZcWklzhFNBvDkn3rY=
+        -----END CERTIFICATE-----
+        
+    grpcOptions:
+      ssl-target-name-override: peer0.orgAccountant.example.com
+      hostnameOverride: peer0.orgAccountant.example.com
+  peer1.orgAccountant.example.com:
+    url: grpcs://localhost:8051
+    tlsCACerts:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICfTCCAiSgAwIBAgIRAPV1ybYMKERmJ6l+117H1ZQwCgYIKoZIzj0EAwIwgYgx
+        CzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1TYW4g
+        RnJhbmNpc2NvMSIwIAYDVQQKExlvcmdBY2NvdW50YW50LmV4YW1wbGUuY29tMSgw
+        JgYDVQQDEx90bHNjYS5vcmdBY2NvdW50YW50LmV4YW1wbGUuY29tMB4XDTI0MDUx
+        NDA4NTAwMFoXDTM0MDUxMjA4NTAwMFowgYgxCzAJBgNVBAYTAlVTMRMwEQYDVQQI
+        EwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1TYW4gRnJhbmNpc2NvMSIwIAYDVQQKExlv
+        cmdBY2NvdW50YW50LmV4YW1wbGUuY29tMSgwJgYDVQQDEx90bHNjYS5vcmdBY2Nv
+        dW50YW50LmV4YW1wbGUuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAElnW8
+        3KVTgjK4R7VCWkJHZsWcPwa6k2RZPcVoEn29zypYkaKRoR5yk9tSEjR+1YeIHpDk
+        mBIt3Lze6iQviNPp6qNtMGswDgYDVR0PAQH/BAQDAgGmMB0GA1UdJQQWMBQGCCsG
+        AQUFBwMCBggrBgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MCkGA1UdDgQiBCBw5N3l
+        H6b5K0/VJYBgKLLA7ak2vD7cefAMFdvrPMBs+jAKBggqhkjOPQQDAgNHADBEAiB2
+        IUhYqoMvKsA+oprcw7WIozGG16mtCgf5ha7J6HWf5wIgHns41etIUG3I2w75BwmE
+        rCv1vYZcWklzhFNBvDkn3rY=
+        -----END CERTIFICATE-----
+        
+    grpcOptions:
+      ssl-target-name-override: peer1.orgAccountant.example.com
+      hostnameOverride: peer1.orgAccountant.example.com
+certificateAuthorities:
+  ca.orgAccountant.example.com:
+    url: https://localhost:7054
+    caName: ca-orgAccountant
+    tlsCACerts:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICeDCCAh6gAwIBAgIRAIPc0cMcZpqvl5XGOquB140wCgYIKoZIzj0EAwIwgYUx
+        CzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1TYW4g
+        RnJhbmNpc2NvMSIwIAYDVQQKExlvcmdBY2NvdW50YW50LmV4YW1wbGUuY29tMSUw
+        IwYDVQQDExxjYS5vcmdBY2NvdW50YW50LmV4YW1wbGUuY29tMB4XDTI0MDUxNDA4
+        NTAwMFoXDTM0MDUxMjA4NTAwMFowgYUxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpD
+        YWxpZm9ybmlhMRYwFAYDVQQHEw1TYW4gRnJhbmNpc2NvMSIwIAYDVQQKExlvcmdB
+        Y2NvdW50YW50LmV4YW1wbGUuY29tMSUwIwYDVQQDExxjYS5vcmdBY2NvdW50YW50
+        LmV4YW1wbGUuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE+nRU8qKpZKe2
+        iV2m1iE/zYJQBgbR5gE7FVhmJjhLiCrDsvKSGPozju2bVm2fmzrljrOa32BG9sgE
+        F4cdud+25KNtMGswDgYDVR0PAQH/BAQDAgGmMB0GA1UdJQQWMBQGCCsGAQUFBwMC
+        BggrBgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MCkGA1UdDgQiBCAODwPkbbYClFhL
+        /AijkLWVDR3TqZl1k8bbWwDI7QHI9DAKBggqhkjOPQQDAgNIADBFAiEAzLzLprun
+        6n7/smXpj20xUdtLR0TBKL+K4x9ZBtwHtYACICIN6rOOcKnS+eZq33LBivZXo6lH
+        hElfUVF8mZPlvh0Q
+        -----END CERTIFICATE-----
+        
+    httpOptions:
+      verify: false
