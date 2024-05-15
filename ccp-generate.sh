@@ -38,12 +38,12 @@ CAPEM=crypto-config/peerOrganizations/orgAccountant.example.com/ca/ca.orgAccount
 echo "$(json_ccp $ORG $P0PORT $P1PORT $CAPORT $PEERPEM $CAPEM)" > connection-orgAccountant.json
 echo "$(yaml_ccp $ORG $P0PORT $P1PORT $CAPORT $PEERPEM $CAPEM)" > connection-orgAccountant.yaml
 
-ORG=2
+ORG=Staff
 P0PORT=9051
 P1PORT=10051
 CAPORT=8054
-PEERPEM=crypto-config/peerOrganizations/org2.example.com/tlsca/tlsca.org2.example.com-cert.pem
-CAPEM=crypto-config/peerOrganizations/org2.example.com/ca/ca.org2.example.com-cert.pem
+PEERPEM=crypto-config/peerOrganizations/orgStaff.example.com/tlsca/tlsca.orgStaff.example.com-cert.pem
+CAPEM=crypto-config/peerOrganizations/orgStaff.example.com/ca/ca.orgStaff.example.com-cert.pem
 
-echo "$(json_ccp $ORG $P0PORT $P1PORT $CAPORT $PEERPEM $CAPEM)" > connection-org2.json
-echo "$(yaml_ccp $ORG $P0PORT $P1PORT $CAPORT $PEERPEM $CAPEM)" > connection-org2.yaml
+echo "$(json_ccp $ORG $P0PORT $P1PORT $CAPORT $PEERPEM $CAPEM)" > connection-orgStaff.json
+echo "$(yaml_ccp $ORG $P0PORT $P1PORT $CAPORT $PEERPEM $CAPEM)" > connection-orgStaff.yaml

@@ -18,17 +18,15 @@ OrdererOrgs:
     # ---------------------------------------------------------------------------
     Specs:
       - Hostname: orderer
-      - Hostname: orderer2
-      - Hostname: orderer3
-      - Hostname: orderer4
-      - Hostname: orderer5
+        SANS: 
+          - localhost
 
 # ---------------------------------------------------------------------------
 # "PeerOrgs" - Definition of organizations managing peer nodes
 # ---------------------------------------------------------------------------
 PeerOrgs:
   # ---------------------------------------------------------------------------
-  # Org1
+  # OrgAccountant
   # ---------------------------------------------------------------------------
   - Name: OrgAccountant
     Domain: orgAccountant.example.com
@@ -68,6 +66,8 @@ PeerOrgs:
     # ---------------------------------------------------------------------------
     Template:
       Count: 2
+      SANS: 
+        - localhost
       # Start: 5
       # Hostname: {{.Prefix}}{{.Index}} # default
     # ---------------------------------------------------------------------------
@@ -76,14 +76,16 @@ PeerOrgs:
     # Count: The number of user accounts _in addition_ to Admin
     # ---------------------------------------------------------------------------
     Users:
-      Count: 1
+      Count: 3
   # ---------------------------------------------------------------------------
-  # Org2: See "Org1" for full specification
+  # OrgStaff: See "OrgAccountant" for full specification
   # ---------------------------------------------------------------------------
-  - Name: Org2
-    Domain: org2.example.com
+  - Name: OrgStaff
+    Domain: orgStaff.example.com
     EnableNodeOUs: true
     Template:
       Count: 2
+      SANS: 
+        - localhost
     Users:
-      Count: 1
+      Count: 10
