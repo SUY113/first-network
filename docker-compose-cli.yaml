@@ -11,6 +11,8 @@ volumes:
   peer1.orgAccountant.example.com:
   peer0.orgStaff.example.com:
   peer1.orgStaff.example.com:
+  peer0.orgManager.example.com:
+  peer1.orgManager.example.com:
 
 networks:
   byfn:
@@ -56,6 +58,22 @@ services:
       service: peer1.orgStaff.example.com
     networks:
       - byfn
+      
+  peer0.orgManager.example.com:
+    container_name: peer0.orgManager.example.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer0.orgManager.example.com
+    networks:
+      - byfn    
+      
+  peer1.orgManager.example.com:
+    container_name: peer1.orgManager.example.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer1.orgManager.example.com
+    networks:
+      - byfn
 
   cli:
     container_name: cli
@@ -91,5 +109,7 @@ services:
       - peer1.orgAccountant.example.com
       - peer0.orgStaff.example.com
       - peer1.orgStaff.example.com
+      - peer0.orgManager.example.com
+      - peer1.orgManager.example.com
     networks:
       - byfn

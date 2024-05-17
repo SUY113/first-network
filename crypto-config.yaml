@@ -89,3 +89,13 @@ PeerOrgs:
         - localhost
     Users:
       Count: 10
+      
+  - Name: OrgManager
+    Domain: orgManager.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 2
+      SANS: 
+        - localhost
+    Users:
+      Count: 3

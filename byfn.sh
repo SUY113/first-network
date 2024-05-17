@@ -126,6 +126,8 @@ function networkUp() {
     COMPOSE_FILES="${COMPOSE_FILES} -f ${COMPOSE_FILE_CA}"
     export BYFN_CAAccountant_PRIVATE_KEY=$(cd crypto-config/peerOrganizations/orgAccountant.example.com/ca && ls *_sk)
     export BYFN_CAStaff_PRIVATE_KEY=$(cd crypto-config/peerOrganizations/orgStaff.example.com/ca && ls *_sk)
+    #Bo sung privateket cho manager.
+    export BYFN_CAManager_PRIVATE_KEY=$(cd crypto-config/peerOrganizations/orgManager.example.com/ca && ls *_sk)
   fi
   if [ "${CONSENSUS_TYPE}" == "kafka" ]; then
     COMPOSE_FILES="${COMPOSE_FILES} -f ${COMPOSE_FILE_KAFKA}"
@@ -155,83 +157,11 @@ function networkUp() {
   fi
 
   # now run the end to end script
-  docker exec cli scripts/script.sh $CHANNEL_NAME $CLI_DELAY $LANGUAGE $CLI_TIMEOUT $VERBOSE $NO_CHAINCODE
-  if [ $? -ne 0 ]; then
-    echo "ERROR !!!! Test failed"
-    exit 1
-  fi 
-}
-
-# Upgrade the network components which are at version 1.3.x to 1.4.x
-# Stop the orderer and peers, backup the ledger for orderer and peers, cleanup chaincode containers and images
-# and relaunch the orderer and peers with latest tag
-function upgradeNetwork() {
-  if [[ "$IMAGETAG" == *"1.4"* ]] || [[ $IMAGETAG == "latest" ]]; then
-    docker inspect -f '{{.Config.Volumes}}' orderer.example.com | grep -q '/var/hyperledger/production/orderer'
-    if [ $? -ne 0 ]; then
-      echo "ERROR !!!! This network does not appear to start with fabric-samples >= v1.3.x?"
-      exit 1
-    fi
-
-    LEDGERS_BACKUP=./ledgers-backup
-
-    # create ledger-backup directory
-    mkdir -p $LEDGERS_BACKUP
-
-    export IMAGE_TAG=$IMAGETAG
-    COMPOSE_FILES="-f ${COMPOSE_FILE}"
-    if [ "${CERTIFICATE_AUTHORITIES}" == "true" ]; then
-      COMPOSE_FILES="${COMPOSE_FILES} -f ${COMPOSE_FILE_CA}"
-      export BYFN_CAAccountant_PRIVATE_KEY=$(cd crypto-config/peerOrganizations/orgAccountant.example.com/ca && ls *_sk)
-      export BYFN_CAStaff_PRIVATE_KEY=$(cd crypto-config/peerOrganizations/orgStaff.example.com/ca && ls *_sk)
-    fi
-    if [ "${CONSENSUS_TYPE}" == "kafka" ]; then
-      COMPOSE_FILES="${COMPOSE_FILES} -f ${COMPOSE_FILE_KAFKA}"
-    elif [ "${CONSENSUS_TYPE}" == "etcdraft" ]; then
-      COMPOSE_FILES="${COMPOSE_FILES} -f ${COMPOSE_FILE_RAFT2}"
-    fi
-    if [ "${IF_COUCHDB}" == "couchdb" ]; then
-      COMPOSE_FILES="${COMPOSE_FILES} -f ${COMPOSE_FILE_COUCH}"
-    fi
-
-    # removing the cli container
-    docker-compose $COMPOSE_FILES stop cli
-    docker-compose $COMPOSE_FILES up -d --no-deps cli
-
-    echo "Upgrading orderer"
-    docker-compose $COMPOSE_FILES stop orderer.example.com
-    docker cp -a orderer.example.com:/var/hyperledger/production/orderer $LEDGERS_BACKUP/orderer.example.com
-    docker-compose $COMPOSE_FILES up -d --no-deps orderer.example.com
-
-    for PEER in peer0.orgAccountant.example.com peer1.orgAccountant.example.com peer0.orgStaff.example.com peer1.orgStaff.example.com; do
-      echo "Upgrading peer $PEER"
-
-      # Stop the peer and backup its ledger
-      docker-compose $COMPOSE_FILES stop $PEER
-      docker cp -a $PEER:/var/hyperledger/production $LEDGERS_BACKUP/$PEER/
-
-      # Remove any old containers and images for this peer
-      CC_CONTAINERS=$(docker ps | grep dev-$PEER | awk '{print $1}')
-      if [ -n "$CC_CONTAINERS" ]; then
-        docker rm -f $CC_CONTAINERS
-      fi
-      CC_IMAGES=$(docker images | grep dev-$PEER | awk '{print $1}')
-      if [ -n "$CC_IMAGES" ]; then
-        docker rmi -f $CC_IMAGES
-      fi
-
-      # Start the peer again
-      docker-compose $COMPOSE_FILES up -d --no-deps $PEER
-    done
-
-    docker exec cli sh -c "SYS_CHANNEL=$CH_NAME && scripts/upgrade_to_v14.sh $CHANNEL_NAME $CLI_DELAY $LANGUAGE $CLI_TIMEOUT $VERBOSE"    
-    if [ $? -ne 0 ]; then
-      echo "ERROR !!!! Test failed"
-      exit 1
-    fi
-  else
-    echo "ERROR !!!! Pass the v1.4.x image tag"
-  fi
+#  docker exec cli scripts/script.sh $CHANNEL_NAME $CLI_DELAY $LANGUAGE $CLI_TIMEOUT $VERBOSE $NO_CHAINCODE
+#  if [ $? -ne 0 ]; then
+#    echo "ERROR !!!! Test failed"
+#    exit 1
+#  fi 
 }
 
 # Tear down running network
@@ -251,6 +181,9 @@ function networkDown() {
     removeUnwantedImages
     # remove orderer block and other channel configuration transactions and certs
     rm -rf channel-artifacts/*.block channel-artifacts/*.tx crypto-config ./org3-artifacts/crypto-config/ channel-artifacts/org3.json
+    rm -rf channel-artifacts/staffaccountant 
+    rm -rf channel-artifacts/accountantmanager 
+    rm -rf channel-artifacts/staffstaff
     # remove the docker-compose yaml file that was customized to the example
     rm -f docker-compose-e2e.yaml
   fi
@@ -275,14 +208,21 @@ function replacePrivateKey() {
   # The next steps will replace the template's contents with the
   # actual values of the private key file names for the two CAs.
   CURRENT_DIR=$PWD
+  #accountant
   cd crypto-config/peerOrganizations/orgAccountant.example.com/ca/
   PRIV_KEY=$(ls *_sk)
   cd "$CURRENT_DIR"
   sed $OPTS "s/CAAccountant_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-e2e.yaml
+  #staff
   cd crypto-config/peerOrganizations/orgStaff.example.com/ca/
   PRIV_KEY=$(ls *_sk)
   cd "$CURRENT_DIR"
   sed $OPTS "s/CAStaff_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-e2e.yaml
+  #bo sung manager
+  cd crypto-config/peerOrganizations/orgManager.example.com/ca/
+  PRIV_KEY=$(ls *_sk)
+  cd "$CURRENT_DIR"
+  sed $OPTS "s/CAManager_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-e2e.yaml
   # If MacOSX, remove the temporary backup of the docker-compose file
   if [ "$ARCH" == "Darwin" ]; then
     rm docker-compose-e2e.yamlt
@@ -403,12 +343,14 @@ function generateChannelArtifacts() {
     echo "Failed to generate orderer genesis block..."
     exit 1
   fi
+  #STAFFACCOUNTANT CHANNEL
   echo
   echo "#################################################################"
-  echo "### Generating channel configuration transaction 'channel.tx' ###"
+  echo "### Generating channel configuration transaction 'staffaccountant.tx' ###"
   echo "#################################################################"
   set -x
-  configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID $CHANNEL_NAME
+  export CHANNEL_NAME=staffaccountant  && ../bin/configtxgen -profile TwoOrgsChannelStaffAccountant -outputCreateChannelTx ./channel-artifacts/staffaccountant.tx -channelID $CHANNEL_NAME
+  mkdir channel-artifacts/staffaccountant 
   res=$?
   set +x
   if [ $res -ne 0 ]; then
@@ -421,7 +363,7 @@ function generateChannelArtifacts() {
   echo "#######    Generating anchor peer update for OrgAccountantMSP   ##########"
   echo "#################################################################"
   set -x
-  configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/OrgAccountantMSPanchors.tx -channelID $CHANNEL_NAME -asOrg OrgAccountantMSP
+  export CHANNEL_NAME=staffaccountant  && ../bin/configtxgen -profile TwoOrgsChannelStaffAccountant -outputAnchorPeersUpdate ./channel-artifacts/staffaccountant/OrgAccountantMSPanchors.tx -channelID $CHANNEL_NAME -asOrg OrgAccountantMSP
   res=$?
   set +x
   if [ $res -ne 0 ]; then
@@ -434,8 +376,76 @@ function generateChannelArtifacts() {
   echo "#######    Generating anchor peer update for OrgStaffMSP   ##########"
   echo "#################################################################"
   set -x
-  configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate \
-    ./channel-artifacts/OrgStaffMSPanchors.tx -channelID $CHANNEL_NAME -asOrg OrgStaffMSP
+  export CHANNEL_NAME=staffaccountant  && ../bin/configtxgen -profile TwoOrgsChannelStaffAccountant -outputAnchorPeersUpdate ./channel-artifacts/staffaccountant/OrgStaffMSPanchors.tx -channelID $CHANNEL_NAME -asOrg OrgStaffMSP
+  res=$?
+  set +x
+  if [ $res -ne 0 ]; then
+    echo "Failed to generate anchor peer update for OrgStaffMSP..."
+    exit 1
+  fi
+  echo
+  #ACCOUNTANTMANAGER CHANNEL
+  echo
+  echo "#################################################################"
+  echo "### Generating channel configuration transaction 'accountantmanager.tx' ###"
+  echo "#################################################################"
+  set -x
+  export CHANNEL_NAME=accountantmanager  && ../bin/configtxgen -profile TwoOrgsChannelAccountantManager -outputCreateChannelTx ./channel-artifacts/accountantmanager.tx -channelID $CHANNEL_NAME
+  mkdir channel-artifacts/accountantmanager
+  res=$?
+  set +x
+  if [ $res -ne 0 ]; then
+    echo "Failed to generate channel configuration transaction..."
+    exit 1
+  fi
+
+  echo
+  echo "#################################################################"
+  echo "#######    Generating anchor peer update for OrgAccountantMSP   ##########"
+  echo "#################################################################"
+  set -x
+  export CHANNEL_NAME=accountantmanager  && ../bin/configtxgen -profile TwoOrgsChannelAccountantManager -outputAnchorPeersUpdate ./channel-artifacts/accountantmanager/OrgAccountantMSPanchors.tx -channelID $CHANNEL_NAME -asOrg OrgAccountantMSP
+  res=$?
+  set +x
+  if [ $res -ne 0 ]; then
+    echo "Failed to generate anchor peer update for OrgAccountantMSP..."
+    exit 1
+  fi
+
+  echo
+  echo "#################################################################"
+  echo "#######    Generating anchor peer update for OrgManagerMSP   ##########"
+  echo "#################################################################"
+  set -x
+  export CHANNEL_NAME=accountantmanager  && ../bin/configtxgen -profile TwoOrgsChannelAccountantManager -outputAnchorPeersUpdate ./channel-artifacts/accountantmanager/OrgManagerMSPanchors.tx -channelID $CHANNEL_NAME -asOrg OrgManagerMSP
+  res=$?
+  set +x
+  if [ $res -ne 0 ]; then
+    echo "Failed to generate anchor peer update for OrgStaffMSP..."
+    exit 1
+  fi
+  echo
+  #STAFFSTAFF CHANNEL
+  echo
+  echo "#################################################################"
+  echo "### Generating channel configuration transaction 'staffstaff.tx' ###"
+  echo "#################################################################"
+  set -x
+  export CHANNEL_NAME=staffstaff  && ../bin/configtxgen -profile TwoOrgsChannelStaffStaff -outputCreateChannelTx ./channel-artifacts/staffstaff.tx -channelID $CHANNEL_NAME
+  mkdir channel-artifacts/staffstaff
+  res=$?
+  set +x
+  if [ $res -ne 0 ]; then
+    echo "Failed to generate channel configuration transaction..."
+    exit 1
+  fi 
+
+  echo
+  echo "#################################################################"
+  echo "#######    Generating anchor peer update for OrgStaffMSP   ##########"
+  echo "#################################################################"
+  set -x
+  export CHANNEL_NAME=staffstaff  && ../bin/configtxgen -profile TwoOrgsChannelStaffStaff -outputAnchorPeersUpdate ./channel-artifacts/staffstaff/OrgStaffMSPanchors.tx -channelID $CHANNEL_NAME -asOrg OrgStaffMSP
   res=$?
   set +x
   if [ $res -ne 0 ]; then
@@ -491,8 +501,6 @@ elif [ "$MODE" == "restart" ]; then
   EXPMODE="Restarting"
 elif [ "$MODE" == "generate" ]; then
   EXPMODE="Generating certs and genesis block"
-elif [ "$MODE" == "upgrade" ]; then
-  EXPMODE="Upgrading the network"
 else
   printHelp
   exit 1
@@ -566,8 +574,6 @@ elif [ "${MODE}" == "generate" ]; then ## Generate Artifacts
 elif [ "${MODE}" == "restart" ]; then ## Restart the network
   networkDown
   networkUp
-elif [ "${MODE}" == "upgrade" ]; then ## Upgrade the network from version 1.2.x to 1.3.x
-  upgradeNetwork
 else
   printHelp
   exit 1

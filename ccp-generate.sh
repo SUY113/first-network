@@ -47,3 +47,13 @@ CAPEM=crypto-config/peerOrganizations/orgStaff.example.com/ca/ca.orgStaff.exampl
 
 echo "$(json_ccp $ORG $P0PORT $P1PORT $CAPORT $PEERPEM $CAPEM)" > connection-orgStaff.json
 echo "$(yaml_ccp $ORG $P0PORT $P1PORT $CAPORT $PEERPEM $CAPEM)" > connection-orgStaff.yaml
+
+ORG=Manager
+P0PORT=11051
+P1PORT=12051
+CAPORT=9054
+PEERPEM=crypto-config/peerOrganizations/orgManager.example.com/tlsca/tlsca.orgManager.example.com-cert.pem
+CAPEM=crypto-config/peerOrganizations/orgManager.example.com/ca/ca.orgManager.example.com-cert.pem
+
+echo "$(json_ccp $ORG $P0PORT $P1PORT $CAPORT $PEERPEM $CAPEM)" > connection-orgManager.json
+echo "$(yaml_ccp $ORG $P0PORT $P1PORT $CAPORT $PEERPEM $CAPEM)" > connection-orgManager.yaml
