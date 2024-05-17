@@ -9,7 +9,7 @@
 ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 PEER0_ORGAccountant_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/orgAccountant.example.com/peers/peer0.orgAccountant.example.com/tls/ca.crt
 PEER0_ORGStaff_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/orgStaff.example.com/peers/peer0.orgStaff.example.com/tls/ca.crt
-PEER0_ORG3_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls/ca.crt
+PEER0_ORGManager_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/orgManager.example.com/peers/peer0.orgManager.example.com/tls/ca.crt
 
 # verify the result of the end-to-end test
 verifyResult() {
@@ -30,8 +30,8 @@ setOrdererGlobals() {
 
 setGlobals() {
   PEER=$1
-  ORG=$2
-  if [ $ORG -eq 1 ]; then
+  ORG="$2"
+  if [ "$ORG" == "Accountant" ]; then
     CORE_PEER_LOCALMSPID="OrgAccountantMSP"
     CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORGAccountant_CA
     CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/orgAccountant.example.com/users/Admin@orgAccountant.example.com/msp
@@ -40,7 +40,7 @@ setGlobals() {
     else
       CORE_PEER_ADDRESS=peer1.orgAccountant.example.com:8051
     fi
-  elif [ $ORG -eq 2 ]; then
+  elif [ "$ORG" == "Staff" ]; then
     CORE_PEER_LOCALMSPID="OrgStaffMSP"
     CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORGStaff_CA
     CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/orgStaff.example.com/users/Admin@orgStaff.example.com/msp
@@ -50,14 +50,14 @@ setGlobals() {
       CORE_PEER_ADDRESS=peer1.orgStaff.example.com:10051
     fi
 
-  elif [ $ORG -eq 3 ]; then
-    CORE_PEER_LOCALMSPID="Org3MSP"
-    CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORG3_CA
-    CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp
+  elif [ "$ORG" == "Manager" ]; then
+    CORE_PEER_LOCALMSPID="OrgManagerMSP"
+    CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORGManager_CA
+    CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/orgManager.example.com/users/Admin@orgManager.example.com/msp
     if [ $PEER -eq 0 ]; then
-      CORE_PEER_ADDRESS=peer0.org3.example.com:11051
+      CORE_PEER_ADDRESS=peer0.orgManager.example.com:11051
     else
-      CORE_PEER_ADDRESS=peer1.org3.example.com:12051
+      CORE_PEER_ADDRESS=peer1.orgManager.example.com:12051
     fi
   else
     echo "================== ERROR !!! ORG Unknown =================="
@@ -68,19 +68,65 @@ setGlobals() {
   fi
 }
 
-updateAnchorPeers() {
+updateAnchorPeersStaffAccountant() {
   PEER=$1
-  ORG=$2
+  ORG="$2"
   setGlobals $PEER $ORG
 
   if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
     set -x
-    peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/${CORE_PEER_LOCALMSPID}anchors.tx >&log.txt
+    peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/staffaccountant/${CORE_PEER_LOCALMSPID}anchors.tx >&log.txt
     res=$?
     set +x
   else
     set -x
-    peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/${CORE_PEER_LOCALMSPID}anchors.tx --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA >&log.txt
+    peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/staffaccountant/${CORE_PEER_LOCALMSPID}anchors.tx --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA >&log.txt
+    res=$?
+    set +x
+  fi
+  cat log.txt
+  verifyResult $res "Anchor peer update failed"
+  echo "===================== Anchor peers updated for org '$CORE_PEER_LOCALMSPID' on channel '$CHANNEL_NAME' ===================== "
+  sleep $DELAY
+  echo
+}
+
+updateAnchorPeersAccountantManager() {
+  PEER=$1
+  ORG="$2"
+  setGlobals $PEER $ORG
+
+  if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
+    set -x
+    peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/accountantmanager/${CORE_PEER_LOCALMSPID}anchors.tx >&log.txt
+    res=$?
+    set +x
+  else
+    set -x
+    peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/accountantmanager/${CORE_PEER_LOCALMSPID}anchors.tx --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA >&log.txt
+    res=$?
+    set +x
+  fi
+  cat log.txt
+  verifyResult $res "Anchor peer update failed"
+  echo "===================== Anchor peers updated for org '$CORE_PEER_LOCALMSPID' on channel '$CHANNEL_NAME' ===================== "
+  sleep $DELAY
+  echo
+}
+
+updateAnchorPeersStaffStaff() {
+  PEER=$1
+  ORG="$2"
+  setGlobals $PEER $ORG
+
+  if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
+    set -x
+    peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/staffstaff/${CORE_PEER_LOCALMSPID}anchors.tx >&log.txt
+    res=$?
+    set +x
+  else
+    set -x
+    peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/staffstaff/${CORE_PEER_LOCALMSPID}anchors.tx --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA >&log.txt
     res=$?
     set +x
   fi
@@ -94,7 +140,7 @@ updateAnchorPeers() {
 ## Sometimes Join takes time hence RETRY at least 5 times
 joinChannelWithRetry() {
   PEER=$1
-  ORG=$2
+  ORG="$2"
   setGlobals $PEER $ORG
 
   set -x

@@ -157,11 +157,13 @@ function networkUp() {
   fi
 
   # now run the end to end script
-#  docker exec cli scripts/script.sh $CHANNEL_NAME $CLI_DELAY $LANGUAGE $CLI_TIMEOUT $VERBOSE $NO_CHAINCODE
-#  if [ $? -ne 0 ]; then
-#    echo "ERROR !!!! Test failed"
-#    exit 1
-#  fi 
+  docker exec cli scripts/createChannel_sa.sh $CHANNEL_NAME $CLI_DELAY $LANGUAGE $CLI_TIMEOUT $VERBOSE $NO_CHAINCODE
+  docker exec cli scripts/createChannel_am.sh $CHANNEL_NAME $CLI_DELAY $LANGUAGE $CLI_TIMEOUT $VERBOSE $NO_CHAINCODE
+  docker exec cli scripts/createChannel_ss.sh $CHANNEL_NAME $CLI_DELAY $LANGUAGE $CLI_TIMEOUT $VERBOSE $NO_CHAINCODE
+  if [ $? -ne 0 ]; then
+    echo "ERROR !!!! Test failed"
+    exit 1
+  fi 
 }
 
 # Tear down running network
@@ -466,7 +468,7 @@ CLI_DELAY=3
 # system channel name defaults to "byfn-sys-channel"
 SYS_CHANNEL="byfn-sys-channel"
 # channel name defaults to "mychannel"
-CHANNEL_NAME="mychannel"
+CHANNEL_NAME="staffaccountant"
 # use this as the default docker-compose yaml definition
 COMPOSE_FILE=docker-compose-cli.yaml
 #
