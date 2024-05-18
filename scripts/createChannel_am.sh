@@ -97,31 +97,31 @@ updateAnchorPeersAccountantManager 0 Manager
 
 if [ "${NO_CHAINCODE}" != "true" ]; then
 
-	## Install chaincode on peer0.org1 and peer0.org2
-	echo "Installing chaincode on peer0.org1..."
-	installChaincode 0 1
-	echo "Install chaincode on peer0.org2..."
-	installChaincode 0 2
+	## Install chaincode on peer0.orgAccountant and peer0.orgManager
+	echo "Installing chaincode on peer0.orgAccountant..."
+	installChaincode 0 Accountant
+	echo "Install chaincode on peer0.orgManager..."
+	installChaincode 0 Manager
 
-	# Instantiate chaincode on peer0.org2
-	echo "Instantiating chaincode on peer0.org2..."
-	instantiateChaincode 0 2
+	# Instantiate chaincode on peer0.orgManager
+	echo "Instantiating chaincode on peer0.orgManager..."
+	instantiateChaincode 0 Manager
 
-	# Query chaincode on peer0.org1
-	echo "Querying chaincode on peer0.org1..."
-	chaincodeQuery 0 1 100
+	# Query chaincode on peer0.orgAccountant
+	echo "Querying chaincode on peer0.orgAccountant..."
+	chaincodeQuery 0 Accountant 100
 
 	# Invoke chaincode on peer0.org1 and peer0.org2
-	echo "Sending invoke transaction on peer0.org1 peer0.org2..."
-	chaincodeInvoke 0 1 0 2
+	echo "Sending invoke transaction on peer0.orgAccountant peer0.orgManager..."
+	chaincodeInvoke 0 Accountant 0 Manager
 	
-	## Install chaincode on peer1.org2
-	echo "Installing chaincode on peer1.org2..."
-	installChaincode 1 2
+	## Install chaincode on peer1.orgManager
+	echo "Installing chaincode on peer1.orgManager..."
+	installChaincode 1 Manager
 
-	# Query on chaincode on peer1.org2, check if the result is 90
-	echo "Querying chaincode on peer1.org2..."
-	chaincodeQuery 1 2 90
+	# Query on chaincode on peer1.orgManager, check if the result is 90
+	echo "Querying chaincode on peer1.orgManager..."
+	chaincodeQuery 1 Manager 90
 	
 fi
 

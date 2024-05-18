@@ -161,7 +161,7 @@ joinChannelWithRetry() {
 
 installChaincode() {
   PEER=$1
-  ORG=$2
+  ORG="$2"
   setGlobals $PEER $ORG
   VERSION=${3:-1.0}
   set -x
@@ -176,7 +176,7 @@ installChaincode() {
 
 instantiateChaincode() {
   PEER=$1
-  ORG=$2
+  ORG="$2"
   setGlobals $PEER $ORG
   VERSION=${3:-1.0}
 
@@ -217,7 +217,7 @@ upgradeChaincode() {
 
 chaincodeQuery() {
   PEER=$1
-  ORG=$2
+  ORG="$2"
   setGlobals $PEER $ORG
   EXPECTED_RESULT=$3
   echo "===================== Querying on peer${PEER}.org${ORG} on channel '$CHANNEL_NAME'... ===================== "
