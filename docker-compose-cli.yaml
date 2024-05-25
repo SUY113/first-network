@@ -103,6 +103,7 @@ services:
         - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
         - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
         - ./../../fabric-chaincode-evm:/opt/gopath/src/github.com/hyperledger/fabric-chaincode-evm
+        - ./../../fabric:/opt/gopath/src/github.com/hyperledger/fabric
     depends_on:
       - orderer.example.com
       - peer0.orgAccountant.example.com
