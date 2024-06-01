@@ -25,14 +25,7 @@ LANGUAGE=`echo "$LANGUAGE" | tr [:upper:] [:lower:]`
 COUNTER=1
 MAX_RETRY=10
 
-CC_SRC_PATH="github.com/chaincode/mytoken/go/"
-if [ "$LANGUAGE" = "node" ]; then
-	CC_SRC_PATH="/opt/gopath/src/github.com/chaincode/chaincode_example02/node/"
-fi
-
-if [ "$LANGUAGE" = "java" ]; then
-	CC_SRC_PATH="/opt/gopath/src/github.com/chaincode/chaincode_example02/java/"
-fi
+CC_SRC_PATH_Database="github.com/chaincode/database/go/"
 
 echo "Channel name : "$CHANNEL_NAME
 
@@ -99,13 +92,13 @@ if [ "${NO_CHAINCODE}" != "true" ]; then
 
 	## Install chaincode on peer0.org1 and peer0.org2
 	echo "Installing chaincode on peer0.orgAccountant..."
-	installChaincodeToken 0 Accountant
+	installChaincodeDatabase 0 Accountant
 	echo "Install chaincode on peer0.orgStaff..."
-	installChaincodeToken 0 Staff
+	installChaincodeDatabase 0 Staff
 
-	# Instantiate chaincode on peer0.orgStaff
+	# Instantiate chaincode on peer0.orgAccountant
 	echo "Instantiating chaincode on peer0.orgAccountant..."
-	instantiateChaincodeToken 0 Accountant
+	instantiateChaincodeDatabase 0 Accountant
 
 	# Query chaincode on peer0.orgAccountant
 #	echo "Querying chaincode on peer0.orgAccountant..."

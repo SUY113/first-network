@@ -25,14 +25,7 @@ LANGUAGE=`echo "$LANGUAGE" | tr [:upper:] [:lower:]`
 COUNTER=1
 MAX_RETRY=10
 
-CC_SRC_PATH="github.com/chaincode/chaincode_example02/go/"
-if [ "$LANGUAGE" = "node" ]; then
-	CC_SRC_PATH="/opt/gopath/src/github.com/chaincode/chaincode_example02/node/"
-fi
-
-if [ "$LANGUAGE" = "java" ]; then
-	CC_SRC_PATH="/opt/gopath/src/github.com/chaincode/chaincode_example02/java/"
-fi
+CC_SRC_PATH_Database="github.com/chaincode/database/go/"
 
 echo "Channel name : "$CHANNEL_NAME
 
@@ -98,30 +91,14 @@ updateAnchorPeersAccountantManager 0 Manager
 if [ "${NO_CHAINCODE}" != "true" ]; then
 
 	## Install chaincode on peer0.orgAccountant and peer0.orgManager
-	echo "Installing chaincode on peer0.orgAccountant..."
-	installChaincode 0 Accountant
+#	echo "Installing chaincode on peer0.orgAccountant..."
+#	installChaincodeDatabase 0 Accountant
 	echo "Install chaincode on peer0.orgManager..."
-	installChaincode 0 Manager
+	installChaincodeDatabase 0 Manager
 
 	# Instantiate chaincode on peer0.orgManager
 	echo "Instantiating chaincode on peer0.orgManager..."
-	instantiateChaincode 0 Manager
-
-	# Query chaincode on peer0.orgAccountant
-	echo "Querying chaincode on peer0.orgAccountant..."
-	chaincodeQuery 0 Accountant 100
-
-	# Invoke chaincode on peer0.org1 and peer0.org2
-	echo "Sending invoke transaction on peer0.orgAccountant peer0.orgManager..."
-	chaincodeInvoke 0 Accountant 0 Manager
-	
-	## Install chaincode on peer1.orgManager
-	echo "Installing chaincode on peer1.orgManager..."
-	installChaincode 1 Manager
-
-	# Query on chaincode on peer1.orgManager, check if the result is 90
-	echo "Querying chaincode on peer1.orgManager..."
-	chaincodeQuery 1 Manager 90
+	instantiateChaincodeDatabase 0 Manager
 	
 fi
 
