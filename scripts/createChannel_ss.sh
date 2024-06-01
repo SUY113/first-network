@@ -26,7 +26,7 @@ COUNTER=1
 MAX_RETRY=10
 
 CC_SRC_PATH_Database="github.com/chaincode/database/go/"
-
+CC_SRC_PATH_Tokenerc="github.com/chaincode/mytoken/go/"
 echo "Channel name : "$CHANNEL_NAME
 
 # import utils
@@ -87,8 +87,10 @@ if [ "${NO_CHAINCODE}" != "true" ]; then
 	# Instantiate chaincode on peer0.orgStaff
 	echo "Instantiating chaincode on peer0.orgStaff..."
 	instantiateChaincodeDatabase 0 Staff
+	# Instantiate chaincode on peer0.orgStaff
+	echo "Instantiating chaincode token on peer0.Staff..."
+	instantiateChaincodeToken 0 Staff
 
-	
 fi
 
 echo

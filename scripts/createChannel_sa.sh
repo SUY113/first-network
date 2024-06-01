@@ -26,6 +26,7 @@ COUNTER=1
 MAX_RETRY=10
 
 CC_SRC_PATH_Database="github.com/chaincode/database/go/"
+CC_SRC_PATH_Tokenerc="github.com/chaincode/mytoken/go/"
 
 echo "Channel name : "$CHANNEL_NAME
 
@@ -89,16 +90,26 @@ echo "Updating anchor peers for orgStaff..."
 updateAnchorPeersStaffAccountant 0 Staff
 
 if [ "${NO_CHAINCODE}" != "true" ]; then
-
-	## Install chaincode on peer0.org1 and peer0.org2
-	echo "Installing chaincode on peer0.orgAccountant..."
+	#DATABASE
+	## Install chaincode on peer0.orgAccountant and peer0.orgStaff
+	echo "Installing chaincode database on peer0.orgAccountant..."
 	installChaincodeDatabase 0 Accountant
-	echo "Install chaincode on peer0.orgStaff..."
+	echo "Install chaincode database on peer0.orgStaff..."
 	installChaincodeDatabase 0 Staff
 
 	# Instantiate chaincode on peer0.orgAccountant
-	echo "Instantiating chaincode on peer0.orgAccountant..."
+	echo "Instantiating chaincode database on peer0.orgAccountant..."
 	instantiateChaincodeDatabase 0 Accountant
+	#TOKENERC20
+	## Install chaincode on peer0.orgAccountant and peer0.orgStaff
+	echo "Installing chaincode token on peer0.orgAccountant..."
+	installChaincodeToken 0 Accountant
+	echo "Install chaincode token on peer0.orgStaff..."
+	installChaincodeToken 0 Staff
+
+	# Instantiate chaincode on peer0.orgAccountant
+	echo "Instantiating chaincode token on peer0.orgAccountant..."
+	instantiateChaincodeToken 0 Accountant
 
 	# Query chaincode on peer0.orgAccountant
 #	echo "Querying chaincode on peer0.orgAccountant..."
