@@ -58,14 +58,14 @@ joinChannel () {
     for peer in 0 1; do
       joinChannelWithRetry $peer $ORG
       echo "===================== peer${peer}.org${ORG} joined channel '$CHANNEL_NAME' ===================== "
-      slepp $DELAY
+      sleep $DELAY
       echo
     done
   elif [ "$ORG" == "Manager" ]; then
     for peer in 0 1; do
       joinChannelWithRetry $peer $ORG
        echo "===================== peer${peer}.org${ORG} joined channel '$CHANNEL_NAME' ===================== "
-       slepp $DELAY
+       sleep $DELAY
        echo
     done
   else
