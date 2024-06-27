@@ -27,6 +27,7 @@ MAX_RETRY=10
 
 CC_SRC_PATH_Database="github.com/chaincode/database/go/"
 CC_SRC_PATH_Tokenerc="github.com/chaincode/mytoken/go/"
+CC_SRC_PATH_Evmcc="github.com/hyperledger/fabric-chaincode-evm/evmcc"
 
 echo "Channel name : "$CHANNEL_NAME
 
@@ -96,7 +97,7 @@ if [ "${NO_CHAINCODE}" != "true" ]; then
 	installChaincodeDatabase 0 Accountant
 	echo "Install chaincode database on peer0.orgStaff..."
 	installChaincodeDatabase 0 Staff
-
+	
 	# Instantiate chaincode on peer0.orgAccountant
 	echo "Instantiating chaincode database on peer0.orgAccountant..."
 	instantiateChaincodeDatabase 0 Accountant
@@ -111,6 +112,11 @@ if [ "${NO_CHAINCODE}" != "true" ]; then
 	echo "Instantiating chaincode token on peer0.orgAccountant..."
 	instantiateChaincodeToken 0 Accountant
 
+	##EVMCC
+	echo "Install evmcc on peer0.orgAccountant..."
+	installChaincodeEvmcc 0 Accountant
+	echo "Instantiating chaincode evmcc on peer0.orgAccountant..."
+	instantiateChaincodeEvmcc 0 Accountant
 	# Query chaincode on peer0.orgAccountant
 #	echo "Querying chaincode on peer0.orgAccountant..."
 #	chaincodeQuery 0 Accountant 100
